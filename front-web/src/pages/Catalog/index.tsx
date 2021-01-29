@@ -1,14 +1,26 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { makeRequest } from '../../core/utils/request';
 import ProductCard from './components/ProductCard';
 import './styles.scss';
 
 const Catalog = () => {
 
+    //quando o componente iniciar, buscar a lista de produtos
     useEffect(() => {
-        fetch('http://localhost:3000/products')
-          .then(response => response.json())
-          .then(response => console.log(response));
+        //limitações do fetch:
+        //muito verboso
+        //não tem suporte nativo p/ ler o progresso de upload de arquivos (aquela barra de progresso)
+        //não tem suporte nativo p/ enviar 'query strings' que são aqueles parâmetros na url
+        //fetch('http://localhost:3000/products') - substituindo fetch por axios
+        //  .then(response => response.json())
+        //  .then(response => console.log(response));
+        const params = {
+            page: 0,
+            linesPerPage: 5
+        }
+        makeRequest({ url:'/products', params})
+            .then(response => console.log(response));
     }, []);
 
     return (
