@@ -12,6 +12,7 @@ const Catalog = () => {
     //e listar os produtos dinâmicamente
     const [productsResponse, setProductsResponse] = useState<ProductsResponse>();
     const [isLoading, setIsLoading] = useState(false);
+    const [activePage, setActivePage] = useState(1);
 
     //console.log(productsResponse);
 
@@ -25,7 +26,7 @@ const Catalog = () => {
         //  .then(response => response.json())
         //  .then(response => console.log(response));
         const params = {
-            page: 0,
+            page: activePage,
             linesPerPage: 8
         }
 
@@ -37,7 +38,7 @@ const Catalog = () => {
                 // finalizar o loader
                 setIsLoading(false);
             })
-    }, []);
+    }, [activePage]);
 
     return (
         <div className="catalog-container">
@@ -53,7 +54,13 @@ const Catalog = () => {
                     ))
                 )}
             </div>
-            <Pagination />
+            {productsResponse && (
+                <Pagination 
+                    totalPages={productsResponse.totalPages} 
+                    activePage={activePage} 
+                    onChange={page => setActivePage(page)}
+                />
+            )}
         </div>
     );
 }
