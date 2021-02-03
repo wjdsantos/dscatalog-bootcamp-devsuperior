@@ -12,7 +12,7 @@ const Catalog = () => {
     //e listar os produtos dinâmicamente
     const [productsResponse, setProductsResponse] = useState<ProductsResponse>();
     const [isLoading, setIsLoading] = useState(false);
-    const [activePage, setActivePage] = useState(1);
+    const [activePage, setActivePage] = useState(0);
 
     //console.log(productsResponse);
 
