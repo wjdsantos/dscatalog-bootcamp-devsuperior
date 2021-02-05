@@ -1,3 +1,4 @@
+import { makeRequest } from 'core/utils/request';
 import React, { useState } from 'react';
 import BaseForm from '../../BaseForm';
 import './styles.scss';
@@ -6,19 +7,22 @@ type FormState = {
     name: string;
     price: string;
     category: string;
+    description: string;
 }
 
+type FormEvent = React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
 const Form = () => {
     const [formData, setFormData] = useState<FormState>({
-        name: 'Computador',
+        name: '',
         price: '',
-        category: ''
+        category: '',
+        description: ''
     });
 
 //    const [price, setPrice] = useState('');
 //    const [category, setCategory] = useState('');
 
-    const handdleOnChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handdleOnChange = (event: FormEvent) => {
         const name = event.target.name;
         const value = event.target.value;
 
@@ -27,8 +31,16 @@ const Form = () => {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
- 
-        console.log(formData);
+        const payload = {
+            ...formData,
+            imgUrl: 'https://images1.kabum.com.br/produtos/fotos/128561/console-microsoft-xbox-series-s-500gb-branco-rrs-00006_1601067301_g.jpg',
+            categories: [{id: formData.category }]
+        }
+
+        makeRequest({ url: '/products', method: 'POST', data: payload})
+            .then(() => {
+                setFormData({ name: '', category: '', price: '', description: '' })
+            })
     }
     return (
         <form onSubmit={handleSubmit}>
@@ -49,9 +61,9 @@ const Form = () => {
                             onChange={handdleOnChange}
                             name="category"
                         >
-                            <option value="livros">Livros</option>
-                            <option value="computadores">Computadores</option>
-                            <option value="eletronicos">Eletrônicos</option>
+                            <option value="1">Livros</option>
+                            <option value="3">Computadores</option>
+                            <option value="2">Eletrônicos</option>
                         </select>
                         <input 
                             value={formData.price}
@@ -60,6 +72,16 @@ const Form = () => {
                             className="form-control" 
                             onChange={handdleOnChange}
                             placeholder="Preço"
+                        />
+                    </div>
+                    <div className="col6">
+                        <textarea 
+                            name="description" 
+                            value={formData.description}
+                            onChange={handdleOnChange}
+                            className="form-control"
+                            cols={30} 
+                            rows={10} 
                         />
                     </div>
                 </div>
