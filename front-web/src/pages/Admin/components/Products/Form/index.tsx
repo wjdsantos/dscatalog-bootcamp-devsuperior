@@ -1,5 +1,5 @@
-import { makeRequest } from 'core/utils/request';
 import React, { useState } from 'react';
+import { makePrivateRequest } from 'core/utils/request';
 import BaseForm from '../../BaseForm';
 import './styles.scss';
 
@@ -37,7 +37,7 @@ const Form = () => {
             categories: [{id: formData.category }]
         }
 
-        makeRequest({ url: '/products', method: 'POST', data: payload})
+        makePrivateRequest({ url: '/products', method: 'POST', data: payload})
             .then(() => {
                 setFormData({ name: '', category: '', price: '', description: '' })
             })
@@ -80,7 +80,7 @@ const Form = () => {
                             value={formData.description}
                             onChange={handdleOnChange}
                             className="form-control"
-                            cols={30} 
+                            cols={55} 
                             rows={10} 
                         />
                     </div>
