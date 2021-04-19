@@ -56,6 +56,16 @@ export const isAllowedByRole = (routeRoles: Role[] = []) => {
         return true;
     }
 
-    const { authorities } = getAccessTokenDecoded();    
-    return routeRoles.some(role => authorities.includes(role));
+// Como está na aula, mas está dando erro quando deslogo (apago o registro do login no browser)
+// ou entrando pela primeira vez na aplivação, antes de logar.
+//    const { authorities } = getAccessTokenDecoded();    
+//    return routeRoles.some(role => authorities.includes(role));
+
+//Como estava antes da aula
+//    return false;
+
+//Uma outra forma de fazer a mesma coisa, mostrada na aula, mas está dando o mesmo erro.
+    const userToken = getAccessTokenDecoded();
+    const userRoles = userToken.authorities;
+    return routeRoles.some(role => userRoles.includes(role));
 }

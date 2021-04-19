@@ -80,7 +80,7 @@ const Form = () => {
                             value={formData.description}
                             onChange={handdleOnChange}
                             className="form-control"
-                            cols={55} 
+                            cols={50} 
                             rows={10} 
                         />
                     </div>
