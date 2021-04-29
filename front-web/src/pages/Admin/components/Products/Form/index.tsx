@@ -1,16 +1,20 @@
-import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import Select from 'react-select';
 import { makePrivateRequest, makeRequest } from 'core/utils/request';
 import { useHistory, useParams } from 'react-router';
 import BaseForm from '../../BaseForm';
+import { Category } from 'core/types/Product';
 import './styles.scss';
+import PriceField from './PriceField';
 
-type FormState = {
+export type FormState = {
     name: string;
     price: string;
     description: string;
     imgUrl: string;
+    categories: Category[];
 }
 
 type ParamsType = {
@@ -18,14 +22,17 @@ type ParamsType = {
 }
 
 const Form = () => {
-    const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormState>();
+    const { register, handleSubmit, formState: { errors }, setValue, control } = useForm<FormState>();
     const history = useHistory();
     const { productId } = useParams<ParamsType>();
+    const [isLoadingCategories, setIsLoadingCategories] = useState(false);
+    const [categories, setCategories] = useState<Category[]>([]);
     const isEditing = productId !== 'create';
     const formTitle = isEditing ? 'Editar produto' : 'cadastrar um produto';
 
+
     useEffect(() => {
-        if (isEditing) { //Reconhecendo que estou editando
+        if (isEditing) {  //Reconhecendo que estou editando
             makeRequest({ url: `/products/${productId}` })
             .then(response => {
                 setValue('name', response.data.name);
@@ -36,8 +43,16 @@ const Form = () => {
         }
     }, [productId, isEditing, setValue]);
 
+    useEffect(() => {
+        setIsLoadingCategories(true);
+        makeRequest({ url: '/categories'})
+            .then(response => setCategories(response.data.content))
+            .finally(() => setIsLoadingCategories(false))
+    }, []);
+
     const onSubmit = (data: FormState) => {
-        makePrivateRequest({ 
+        console.log(data)
+        /* makePrivateRequest({ 
             url: isEditing ? `/products/${productId}` : '/products', 
             method: isEditing ? 'PUT' : 'POST',
             data 
@@ -48,7 +63,7 @@ const Form = () => {
             })
             .catch(() => {
                 toast.error('Erro ao salvar produto!');
-            })
+            }) */
     }
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -59,7 +74,6 @@ const Form = () => {
                     <div className="col-6">
                         <div className="margin-bottom-30">
                             <input 
-    //                            value={formData.name}
                                 {...register('name', {
                                     required: "Campo obrigatório",
                                     minLength: {
@@ -72,10 +86,8 @@ const Form = () => {
                                         }    
                                     })
                                 }
-    //                            name="name"
                                 type="text"
                                 className="form-control input-base" 
-    //                            onChange={handdleOnChange}
                                 placeholder="Nome do produto"
                             />
                             {errors.name && (
@@ -85,15 +97,24 @@ const Form = () => {
                             )}
                         </div>
                         <div className="margin-bottom-30">
-                            <input 
-    //                            value={formData.price}
-                                {...register('price', { required: "Campo obrigatório" })}
-    //                            name="price"
-                                type="text"
-                                className="form-control input-base" 
-    //                            onChange={handdleOnChange}
-                                placeholder="Preço"
+                            <Controller
+                                //as={Select}
+                                render={({ field }) => <Select
+                                    {...field}
+                                    options={categories} 
+                                />}
+                                name="categories"
+                                rules={{ required: "Campo obrigatório" }}
+                                control={control}
+                                getOptionLabel={(option: Category) => option.name}
+                                getOptionValue={(option: Category) => String(option.id)}
+                                classNamePrefix="categories-select"
+                                placeholder="Categorias"
+                                isMulti
                             />
+                        </div>
+                        <div className="margin-bottom-30">
+                            <PriceField control={control} />
                             {errors.price && (
                                 <div className="invalid-feedback d-block">
                                   {errors.price.message}
@@ -102,12 +123,9 @@ const Form = () => {
                         </div>
                         <div className="margin-bottom-30">
                             <input 
-    //                            value={formData.name}
                                 {...register('imgUrl', { required: "Campo obrigatório" })}
-    //                            name="imaeUrl"
                                 type="text"
                                 className="form-control input-base" 
-    //                            onChange={handdleOnChange}
                                 placeholder="Imagem do produto"
                             />
                             {errors.imgUrl && (
@@ -119,10 +137,7 @@ const Form = () => {
                     </div>
                     <div className="col6">
                         <textarea 
-//                            name="description input-base" 
-//                            value={formData.description}
                             {...register('description', { required: "Campo obrigatório" })}
-//                            onChange={handdleOnChange}
                             className="form-control input-base"
                             placeholder="Descrição"
                             cols={40} 

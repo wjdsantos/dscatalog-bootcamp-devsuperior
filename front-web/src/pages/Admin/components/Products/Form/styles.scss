@@ -1,18 +1,13 @@
-.admin-base-form {
-    padding: 70px 45px 50px 45px;
-    border-radius: 20px;
-    width: 1055px;
+.categories-select__control {
+    height: 50px;
+    border-radius: 10px !important;
+    border: 1px solid #E1E1E1;
 }
 
-.base-form-title {
-    font-size: 24px;
-    line-height: 33px;
-    letter-spacing: -0.015em;
-    color: #263238;
-    text-transform: uppercase;
+.categories-select__indicator-separator {
+    display: none;
 }
 
-.base-form-actions {
-    margin-top: 73px;
-    text-align: right;
+.categories-select__placeholder {
+    color: #9E9E9E;
 }
