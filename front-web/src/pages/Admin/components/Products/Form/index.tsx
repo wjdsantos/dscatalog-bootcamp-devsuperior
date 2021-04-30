@@ -30,7 +30,6 @@ const Form = () => {
     const isEditing = productId !== 'create';
     const formTitle = isEditing ? 'Editar produto' : 'cadastrar um produto';
 
-
     useEffect(() => {
         if (isEditing) {  //Reconhecendo que estou editando
             makeRequest({ url: `/products/${productId}` })
@@ -39,6 +38,7 @@ const Form = () => {
                 setValue('price', response.data.price);
                 setValue('description', response.data.description);
                 setValue('imgUrl', response.data.imgUrl);
+                setValue('categories', response.data.categories);
             })
         }
     }, [productId, isEditing, setValue]);
@@ -51,8 +51,7 @@ const Form = () => {
     }, []);
 
     const onSubmit = (data: FormState) => {
-        console.log(data)
-        /* makePrivateRequest({ 
+        makePrivateRequest({ 
             url: isEditing ? `/products/${productId}` : '/products', 
             method: isEditing ? 'PUT' : 'POST',
             data 
@@ -63,7 +62,7 @@ const Form = () => {
             })
             .catch(() => {
                 toast.error('Erro ao salvar produto!');
-            }) */
+            })
     }
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -74,7 +73,8 @@ const Form = () => {
                     <div className="col-6">
                         <div className="margin-bottom-30">
                             <input 
-                                {...register('name', {
+                                name="name"
+                                ref={register({
                                     required: "Campo obrigatório",
                                     minLength: {
                                         value: 5,
@@ -98,20 +98,24 @@ const Form = () => {
                         </div>
                         <div className="margin-bottom-30">
                             <Controller
-                                //as={Select}
-                                render={({ field }) => <Select
-                                    {...field}
-                                    options={categories} 
-                                />}
+                                as={Select}
                                 name="categories"
-                                rules={{ required: "Campo obrigatório" }}
+                                rules={{ required: true }}
                                 control={control}
+                                isLoading={isLoadingCategories} 
+                                options={categories}
                                 getOptionLabel={(option: Category) => option.name}
                                 getOptionValue={(option: Category) => String(option.id)}
                                 classNamePrefix="categories-select"
                                 placeholder="Categorias"
+                                defaultValue=""
                                 isMulti
                             />
+                            {errors.categories && (
+                                <div className="invalid-feedback d-block">
+                                  Campo obrigatório
+                                </div>
+                            )}
                         </div>
                         <div className="margin-bottom-30">
                             <PriceField control={control} />
@@ -123,7 +127,8 @@ const Form = () => {
                         </div>
                         <div className="margin-bottom-30">
                             <input 
-                                {...register('imgUrl', { required: "Campo obrigatório" })}
+                                name="imgUrl"
+                                ref={register({ required: "Campo obrigatório" })}
                                 type="text"
                                 className="form-control input-base" 
                                 placeholder="Imagem do produto"
@@ -137,7 +142,8 @@ const Form = () => {
                     </div>
                     <div className="col6">
                         <textarea 
-                            {...register('description', { required: "Campo obrigatório" })}
+                            name="description"
+                            ref={register({ required: "Campo obrigatório" })}
                             className="form-control input-base"
                             placeholder="Descrição"
                             cols={40} 
