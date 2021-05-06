@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ProductsResponse } from 'core/types/Product';
+import Pagination from 'core/components/Pagination';
 import { makeRequest } from 'core/utils/request';
+import ProductFilters, { FilterForm } from 'core/components/ProductFilters';
 import ProductCard from './components/ProductCard';
 import ProductCardLoader from './components/Loaders/ProductCardLoader';
 import './styles.scss';
-import Pagination from 'core/components/Pagination';
 
 const Catalog = () => {
     //Quando a lista de produtos estiver disponível, popular um estado no componente,
@@ -14,10 +15,7 @@ const Catalog = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [activePage, setActivePage] = useState(0);
 
-    //console.log(productsResponse);
-
-    //quando o componente iniciar, buscar a lista de produtos
-    useEffect(() => {
+    const getProducts = useCallback((filter?: FilterForm) => {
         //limitações do fetch:
         //muito verboso
         //não tem suporte nativo p/ ler o progresso de upload de arquivos (aquela barra de progresso)
@@ -27,7 +25,9 @@ const Catalog = () => {
         //  .then(response => console.log(response));
         const params = {
             page: activePage,
-            linesPerPage: 8
+            linesPerPage: 8,
+            name: filter?.name,
+            categoryId: filter?.categoryId
         }
 
         // iniciar o loader
@@ -38,13 +38,23 @@ const Catalog = () => {
                 // finalizar o loader
                 setIsLoading(false);
             })
-    }, [activePage]);
+    }, [activePage])
+
+    //console.log(productsResponse);
+
+    //quando o componente iniciar, buscar a lista de produtos
+    useEffect(() => {
+        getProducts();
+    }, [getProducts]);
 
     return (
         <div className="catalog-container">
-            <h1 className="catalog-title">
-                Catálogo de produtos
-            </h1>
+            <div className="d-flex justify-content-between">
+                <h1 className="catalog-title">
+                    Catálogo de produtos
+                </h1>
+                <ProductFilters onSearch={filter => getProducts(filter)} />
+            </div>
             <div className="catalog-products">
                 {isLoading ? <ProductCardLoader /> : (  //Operador ternário
                     productsResponse?.content.map(product => (
