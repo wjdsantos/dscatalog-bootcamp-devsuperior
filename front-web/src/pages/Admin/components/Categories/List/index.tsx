@@ -1,35 +1,46 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Pagination from 'core/components/Pagination';
 import { CategoriesResponse } from 'core/types/Categories';
-import { makePrivateRequest, makeRequest } from 'core/utils/request';
+import { makePrivateRequest } from 'core/utils/request';
 import { useHistory } from 'react-router-dom';
 import Card from '../Card';
 import CardLoader from '../Loaders/CategoryCardLoader';
 import { toast } from 'react-toastify';
+import GeneralFilters from 'core/components/GeneralFilters';
 
-const List = () => {
+
+//Criei essa props na tentativa de alterar os mesmo a partir do meu GeneralFilters
+type Props = {
+    direction?: String;
+    orderby?: String;
+}
+
+const List = ({ direction, orderby }: Props) => {
     const [categoriesResponse, setCategoriesResponse] = useState<CategoriesResponse>();
     const [isLoading, setIsLoading] = useState(false);
     const [activePage, setActivePage] = useState(0);
+    const [name, setName] = useState('');
+    const [filter, setFilter] = useState('');
     const history = useHistory();
 
     const getCategories = useCallback(() =>{
         const params = {
             page: activePage,
             linesPerPage: 4,
-            direction: 'DESC',
-            orderBy: 'id'
+            direction: 'DESC', //{direction}
+            orderBy: 'id', //{orderby}
+            name
         }
 
         // iniciar o loader
         setIsLoading(true);
-        makeRequest({ url:'/categories', params})
+        makePrivateRequest({ url:'/categories', params})
             .then(response => setCategoriesResponse(response.data)) //Esse response.data é o axios que cria
             .finally(() => {
                 // finalizar o loader
                 setIsLoading(false);
             })
-    }, [activePage]);
+    }, [activePage, name]);
 
     useEffect(() => {
         getCategories();
@@ -37,6 +48,22 @@ const List = () => {
 
     const handleCreate = () => {
         history.push('/admin/categories/create');
+    }
+
+    const handleChangeName = (name: string) => {
+        setActivePage(0);
+        setName(name);
+    }
+
+    const handleChangeCreated = (filter: string) => {
+        setActivePage(0);
+        setFilter(filter);
+    }
+
+    const clearFilters = () => {
+        setActivePage(0);
+        setFilter('');
+        setName('');
     }
 
     const onRemove = (categoryId: number) => {
@@ -56,9 +83,18 @@ const List = () => {
 
     return (
         <div className="admin-categories-list">
-            <button className="btn btn-primary btn-lg" onClick={handleCreate}>
-                ADICIONAR
-            </button>
+            <div className="d-flex justify-content-between">
+                <button className="btn btn-primary btn-lg" onClick={handleCreate}>
+                    ADICIONAR
+                </button>
+                <GeneralFilters
+                    name={name}
+                    filtro={filter}
+                    handleChangeCreated={handleChangeCreated}
+                    handleChangeName={handleChangeName}
+                    clearFilters={clearFilters}
+                />
+            </div>
             <div className="admin-list-container">
                 {isLoading ? <CardLoader /> : (
                     categoriesResponse?.content.map(category => (

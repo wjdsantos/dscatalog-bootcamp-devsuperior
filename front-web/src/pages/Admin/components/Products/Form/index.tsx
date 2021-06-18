@@ -10,6 +10,7 @@ import './styles.scss';
 import PriceField from './PriceField';
 import ImageUpload from '../ImageUpload';
 
+
 export type FormState = {
     name: string;
     price: string;
