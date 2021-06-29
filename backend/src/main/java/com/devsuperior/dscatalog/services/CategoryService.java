@@ -25,10 +25,12 @@ public class CategoryService {
 	private CategoryRepository repository;
 	
 	@Transactional(readOnly = true)
-	public Page<CategoryDTO> findAllPaged(PageRequest pageRequest) {
-		Page<Category> list = repository.findAll(pageRequest);
-		return list.map(x -> new CategoryDTO(x));
+	public Page<CategoryDTO> findAllPaged(String name, PageRequest pageRequest) {
+		Page<Category> page = repository.find(name, pageRequest);
+		repository.find(page.toList());
+		return page.map(x -> new CategoryDTO(x));
 	}
+	
 
 	@Transactional(readOnly = true)
 	public CategoryDTO findById(Long id) {

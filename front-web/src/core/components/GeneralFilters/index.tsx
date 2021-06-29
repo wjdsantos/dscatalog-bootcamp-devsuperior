@@ -53,7 +53,7 @@ const GeneralFilters = ({name,
                 name="filtro"
                 key={`select-${category?.created}`}
                 isLoading={isLoadingCategories} 
-                //value={options}
+                value={options}
                 options={options}
                 getOptionLabel={option => option.label}
                 getOptionValue={option => option.value}
