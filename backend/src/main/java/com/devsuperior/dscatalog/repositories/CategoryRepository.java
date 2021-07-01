@@ -2,8 +2,6 @@ package com.devsuperior.dscatalog.repositories;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -20,8 +18,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 	 * Page<Category> find(Pageable pageble);
 	 */
 
-	
-	Page<Category> find(Pageable pageble);
 
 	@Query("SELECT obj FROM Category obj WHERE obj IN :categories")
 	List<Category> find(List<Category> categories);
