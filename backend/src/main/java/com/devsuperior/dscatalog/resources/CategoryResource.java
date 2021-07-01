@@ -49,7 +49,7 @@ public class CategoryResource {
 	 */
 	
 	
-	@GetMapping(value = "/page")
+	@GetMapping
 	public ResponseEntity<Page<CategoryDTO>> findAll(Pageable pageable) {
 			
 		Page<CategoryDTO> list = service.findAllPaged( pageable);
