@@ -21,9 +21,16 @@ const GeneralFilters = ({name,
     category
     }: Props) => {
     
+    const params = {
+        linesPerPage: 4,
+        direction: 'DESC', //{direction}
+        orderBy: 'id', //{orderby}
+        name
+    }
+
     const options = [
-        { value: 'ASC', label: 'Mais Antigos' },
-        { value: 'DESC', label: 'Mais Novos' },
+        { value: 'ASC', label: 'Mais Antigos', id: 1 },
+        { value: 'DESC', label: 'Mais Novos', id: 2 }
         ]
 
     const [isLoadingCategories, setIsLoadingCategories] = useState(false);
@@ -32,7 +39,7 @@ const GeneralFilters = ({name,
     
     useEffect(() => {
         setIsLoadingCategories(true);
-        makePrivateRequest({ url: '/categories'})
+        makePrivateRequest({ url: '/categories', params})
             .then(response => setCategories(response.data.content))
             .finally(() => setIsLoadingCategories(false))
     }, []);
@@ -51,14 +58,12 @@ const GeneralFilters = ({name,
             </div>
             <Select
                 name="filtro"
-                key={`select-${category?.created}`}
+                key={`select-${options?.values}`}
                 isLoading={isLoadingCategories} 
                 value={options}
                 options={options}
                 getOptionLabel={option => option.label}
                 getOptionValue={option => option.value}
-                //getOptionLabel={(option: Category) => option.name}
-                //getOptionValue={(option: Category) => String(option.id)}
                 className="filter-select-container-category"
                 classNamePrefix="category-select"
                 placeholder="Mais Antigo/Novo"

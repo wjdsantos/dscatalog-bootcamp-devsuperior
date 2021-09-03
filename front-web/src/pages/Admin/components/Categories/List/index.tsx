@@ -24,13 +24,21 @@ const List = ({ direction, orderby }: Props) => {
     const history = useHistory();
 
     const getCategories = useCallback(() =>{
+        // const params = {
+        //     page: activePage,
+        //     linesPerPage: 4,
+        //     direction: 'DESC', //{direction}
+        //     orderBy: 'id', //{orderby}
+        //     name
+        // }
+
         const params = {
             page: activePage,
-            linesPerPage: 4,
-            direction: 'DESC', //{direction}
-            orderBy: 'id', //{orderby}
+            size: 4,
+            sort: 'id,ASC',
             name
         }
+
 
         // iniciar o loader
         setIsLoading(true);

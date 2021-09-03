@@ -85,7 +85,7 @@ const Form = () => {
             <BaseForm 
                 title={formTitle}
             >
-                <div className="row">
+                <div className="product-form-container">
                     <div className="col-6">
                         <div className="margin-bottom-30">
                             <input 
@@ -154,7 +154,7 @@ const Form = () => {
                             ref={register({ required: "Campo obrigatório" })}
                             className="form-control input-base"
                             placeholder="Descrição"
-                            cols={40} 
+                            cols={25} 
                             rows={10} 
                         />
                         {errors.description && (
