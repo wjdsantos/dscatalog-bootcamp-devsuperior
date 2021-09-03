@@ -14,14 +14,14 @@ import com.devsuperior.dscatalog.entities.Category;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
 
-	/*
-	 * @Query("SELECT obj FROM Category obj WHERE " +
-	 * "(:name = '' OR LOWER(obj.name) LIKE LOWER(CONCAT('%',:name,'%'))) " )
-	 * Page<Category> find(Pageable pageble);
-	 */
+	
+	  @Query("SELECT obj FROM Category obj WHERE " +
+	  "(:name = '' OR LOWER(obj.name) LIKE LOWER(CONCAT('%',:name,'%')))")
+	  Page<Category> find(String name, Pageable pageble);
+	 
 
 	
-	Page<Category> find(Pageable pageble);
+	//Page<Category> find(Pageable pageble);
 
 	@Query("SELECT obj FROM Category obj WHERE obj IN :categories")
 	List<Category> find(List<Category> categories);
