@@ -28,6 +28,10 @@ import com.devsuperior.dscatalog.services.exceptions.DatabaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 import com.devsuperior.dscatalog.tests.factory.ProductFactory;
 
+/**
+ * @author Walter
+ *
+ */
 @ExtendWith(SpringExtension.class)  //Não carrega o contexto da aplicação - Não vai ter os Bean´s da aplicação carregados, não vai ter
 									//o container de injeção de dependencia normal carregado; Então nesse caso vai ser usado o Mokito vanila
 public class ProductServiceTests {
@@ -42,7 +46,7 @@ public class ProductServiceTests {
 	private long nonExistingId;
 	private long dependentId;
 	private Product product;
-	private ProductDTO dto;
+//	private ProductDTO dto;
 	private PageImpl<Product> page;  //PageImpl é uma implementação de página
 //	private PageRequest pageRequest;
 	
@@ -81,16 +85,17 @@ public class ProductServiceTests {
 		});
 	}
 	
-	//Exer. 6-30
-	@Test
-	public void updateShouldReturnProductDTOWhenIdExists() {
-		
-		ProductDTO dto = new ProductDTO();
-		
-		ProductDTO result = service.update(existingId, dto);
-		
-		Assertions.assertNotNull(result);
-	}
+	/*
+	 * //Exer. 6-30
+	 * 
+	 * @Test public void updateShouldReturnProductDTOWhenIdExists() {
+	 * 
+	 * ProductDTO dto = new ProductDTO();
+	 * 
+	 * ProductDTO result = service.update(existingId, dto);
+	 * 
+	 * Assertions.assertNotNull(result); }
+	 */
 	
 	//Exer. 6-30
 	@Test
