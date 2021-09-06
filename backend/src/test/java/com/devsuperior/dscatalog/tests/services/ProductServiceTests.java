@@ -42,7 +42,7 @@ public class ProductServiceTests {
 	private long nonExistingId;
 	private long dependentId;
 	private Product product;
-//	private ProductDTO dto;
+	private ProductDTO dto;
 	private PageImpl<Product> page;  //PageImpl é uma implementação de página
 //	private PageRequest pageRequest;
 	
