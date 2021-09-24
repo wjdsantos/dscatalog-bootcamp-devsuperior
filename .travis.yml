@@ -4,16 +4,5 @@ jdk:
 before_install:
   - cd backend
   - chmod +x mvnw
-  - ./mvnw clean package
-script:
-  - docker build -t dscatalog:v2 .
-before_deploy:
-  echo "$DOCKERHUB_PASSWORD" | docker login --username "$DOCKERHUB_USER" --password-stdin
-deploy:
-  provider: script
-  script:
-    docker tag dscatalog:v2 $DOCKERHUB_USER/dscatalog:v2;
-    docker push $DOCKERHUB_USER/dscatalog;
-  on:
-    branch: main
+
 
